@@ -1,0 +1,17 @@
+# OS / tooling
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+
+# Node (if you ever add tooling)
+node_modules/
+
+# Editor temp files
+*.swp
+*.swo
+
+# Optional: keep local-only configs out of git
+.env
