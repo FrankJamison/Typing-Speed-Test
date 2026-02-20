@@ -1,6 +1,8 @@
-# Typing Speed Tester (Vanilla JS)
+# Typing Speed Tester
 
-A lightweight, single-page typing speed test built with plain HTML/CSS/JavaScript. The test starts timing when you begin typing, provides live correctness feedback as you type, and stops only when you match the prompt text **exactly**—then it displays your typing speed in WPM.
+A lightweight, single-page typing speed test built with plain HTML/CSS/JavaScript.
+
+This README is geared for developers: how to run locally, where the logic lives, and what to change when you customize the prompt or scoring.
 
 ## Features
 
@@ -29,6 +31,25 @@ js/
 - `css/style.css` styles the layout and the feedback visuals.
 - `js/script.js` contains the timer, validation (spell-check) logic, and WPM calculation.
 
+## Local Development
+
+There is no build step and no dependencies.
+
+### Option A: Open the file directly
+
+- Open `index.html` in a browser.
+
+This is usually enough, but some environments apply extra restrictions to `file://` pages. If something behaves oddly, use Option B.
+
+### Option B: Serve as a static site (recommended)
+
+Run any static server from the repo root, then open the printed URL.
+
+- Python: `python -m http.server`
+- Node: `npx http-server`
+
+If your team uses a local virtual host (for example, `http://typingspeedtest.localhost/`), point it at this folder and open that URL.
+
 ## How It Works
 
 ### Timing
@@ -50,34 +71,13 @@ This is what drives the border color feedback.
 
 WPM is computed after you finish:
 
-- The prompt text is treated as a fixed number of words using the common rule of thumb:
-  - **1 word = 5 characters**
-- The script uses a fixed character count for the prompt and divides by 5.
+- The prompt is treated as a fixed number of words using the common rule of thumb: **1 word = 5 characters**.
+- The current implementation uses a hard-coded character count (`WORDS = 458 / 5`) rather than computing from the prompt at runtime.
 - WPM is then calculated as:
 
 $$\text{WPM} = \frac{\text{estimated words}}{\text{elapsed minutes}}$$
 
 Note: because the app requires an exact full-text match, the WPM result is based on the entire prompt being completed.
-
-## Run The Project
-
-### Option A: Open the file directly (simplest)
-
-1. Open `index.html` in your browser (double-click it in File Explorer).
-2. Start typing in the textarea.
-
-### Option B: Serve as a static site (recommended)
-
-Use any static file server you like and open the served URL in your browser.
-
-Examples:
-
-- Python:
-  - `python -m http.server`
-- Node (http-server):
-  - `npx http-server`
-
-Then browse to whatever address the server prints.
 
 ## Customize
 
@@ -95,14 +95,14 @@ In `js/script.js`:
 
 - The timer logic lives in `runTimer()`.
 - Matching logic lives in `spellCheck()`.
-- WPM is computed at completion.
+- WPM is computed when the prompt is fully matched.
 
-If you change the prompt text length significantly, you may want to update how the app estimates word count so it reflects the actual prompt length.
+If you change the prompt text, you should also revisit the `WORDS` constant so WPM stays accurate.
 
 ## Notes / Limitations
 
 - The completion condition is **strict**: capitalization, punctuation, spacing, and line breaks must match exactly.
-- The timer starts on `keypress`; certain input methods (e.g., mobile keyboards/IME) may behave differently than a desktop keyboard.
+- The timer starts on `keypress`; some mobile keyboards/IME input methods can behave differently than a desktop keyboard.
 - There is no persistence—refreshing the page resets everything.
 
 ## Tech
